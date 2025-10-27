@@ -1,0 +1,3 @@
+[submodule "sources/smt-scope"]
+	path = sources/smt-scope
+	url = https://github.com/viperproject/smt-scope.git
