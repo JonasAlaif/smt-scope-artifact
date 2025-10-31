@@ -23,10 +23,12 @@ RUN git clone https://github.com/Z3Prover/z3.git . && \
 
 COPY . /usr/src/artifact
 
-WORKDIR /usr/src/artifact/smt-scope/smt-scope-gui
-RUN trunk build --release && cargo clean
-
-WORKDIR /usr/src/artifact/smt-scope/smt-scope-lib
-RUN cargo --config net.git-fetch-with-cli=true fetch && cargo install --path . && cargo clean
-
 WORKDIR /usr/src/artifact/smt-scope
+RUN cargo --config net.git-fetch-with-cli=true fetch && \
+    cd smt-scope-gui && \
+    trunk build --release && \
+    cd ../smt-scope-lib && \
+    cargo install --path . && \
+    cd .. && \
+    cargo clean && \
+    rm -rf /usr/local/cargo/registry

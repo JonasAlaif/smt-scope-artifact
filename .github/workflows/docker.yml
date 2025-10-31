@@ -30,7 +30,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build ${{ matrix.arch }} SMTScope image
-        run: docker buildx build --platform linux/${{ matrix.arch }} --load -t jonasalaif/smt-scope:${{ matrix.arch }} ./sources
+        run: docker buildx build --platform linux/${{ matrix.arch }} --load -t jonasalaif/smt-scope:${{ matrix.arch }} .
 
     #   - name: Run evaluation intro
     #     run: |
