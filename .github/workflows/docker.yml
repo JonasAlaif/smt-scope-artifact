@@ -12,6 +12,7 @@ jobs:
     strategy:
         matrix:
           arch: [ { name: amd64, os: ubuntu-latest }, { name: arm64, os: ubuntu-24.04-arm }]
+        fail-fast: false
     runs-on: ${{ matrix.arch.os }}
     steps:
       - name: Checkout
