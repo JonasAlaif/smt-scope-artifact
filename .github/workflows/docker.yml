@@ -35,7 +35,7 @@ jobs:
             build-mount-path: '/var/lib/docker/'
 
       - name: Restore /var/lib/docker/
-        run: sudo sh -c 'mv "${GITHUB_WORKSPACE}/docker/*" /var/lib/docker'
+        run: sudo sh -c "mv ${GITHUB_WORKSPACE}/docker/* /var/lib/docker"
 
     #   - name: Set up QEMU
     #     uses: docker/setup-qemu-action@v2
