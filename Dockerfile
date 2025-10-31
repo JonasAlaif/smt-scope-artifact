@@ -9,7 +9,7 @@ RUN cargo binstall trunk
 
 RUN \
   apt-get update && \
-  apt-get install -y --no-install-recommends cmake g++ python3-pip python3-jupyterlab python3-numpy python3-scipy python3-setuptools && \
+  apt-get install -y --no-install-recommends cmake g++ python3-pip python3-jupyterlab python3-numpy python3-scipy python3-setuptools mono-devel && \
   rm -rf /var/lib/apt/lists/*
 
 WORKDIR /usr/src/z3
