@@ -20,7 +20,10 @@ jobs:
           submodules: recursive
 
       - name: Move /var/lib/docker/
-        run: mv /var/lib/docker/ "${GITHUB_WORKSPACE}/docker"
+        run: |
+            ls -la /var/lib/
+            ls -la /var/lib/docker/
+            mv /var/lib/docker/ "${GITHUB_WORKSPACE}/docker"
 
       - name: Maximize build space
         uses: easimon/maximize-build-space@master
