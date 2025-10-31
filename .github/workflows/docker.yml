@@ -20,10 +20,7 @@ jobs:
           submodules: recursive
 
       - name: Move /var/lib/docker/
-        run: |
-            ls -la /var/lib/
-            sudo ls -la /var/lib/docker/
-            mv /var/lib/docker/ "${GITHUB_WORKSPACE}/docker"
+        run: sudo mv /var/lib/docker/ "${GITHUB_WORKSPACE}/docker"
 
       - name: Maximize build space
         uses: easimon/maximize-build-space@master
@@ -38,7 +35,7 @@ jobs:
             build-mount-path: '/var/lib/docker/'
 
       - name: Restore /var/lib/docker/
-        run: mv "${GITHUB_WORKSPACE}/docker/*" /var/lib/docker
+        run: sudo sh -c 'mv "${GITHUB_WORKSPACE}/docker/*" /var/lib/docker'
 
     #   - name: Set up QEMU
     #     uses: docker/setup-qemu-action@v2
@@ -51,7 +48,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build ${{ matrix.arch.name }} SMTScope image
-        run: docker buildx build --platform linux/${{ matrix.arch.name }} --load -t jonasalaif/smt-scope:${{ matrix.arch.name }} .
+        run: sudo docker buildx build --platform linux/${{ matrix.arch.name }} --load -t jonasalaif/smt-scope:${{ matrix.arch.name }} .
 
     #   - name: Run evaluation intro
     #     run: |
@@ -73,9 +70,10 @@ jobs:
 
       - name: Save ${{ matrix.arch.name }} SMTScope image
         run: |
-          docker push jonasalaif/smt-scope:${{ matrix.arch.name }}
-          docker tag jonasalaif/smt-scope:${{ matrix.arch.name }} jonasalaif/smt-scope:latest
-          docker save jonasalaif/smt-scope:latest | gzip > smt-scope-${{ matrix.arch.name }}.tar.gz
+          sudo docker push jonasalaif/smt-scope:${{ matrix.arch.name }}
+          sudo docker tag jonasalaif/smt-scope:${{ matrix.arch.name }} jonasalaif/smt-scope:latest
+          sudo docker save jonasalaif/smt-scope:latest | gzip > smt-scope-${{ matrix.arch.name }}.tar.gz
+          sudo chmod 666 smt-scope-${{ matrix.arch.name }}.tar.gz
 
       - name: Upload release smt-scope-${{ matrix.arch.name }}
         uses: softprops/action-gh-release@v1
@@ -85,8 +83,8 @@ jobs:
 
       - name: Clean up after ${{ matrix.arch.name }} SMTScope image
         run: |
-          rm smt-scope-${{ matrix.arch.name }}.tar.gz
-          docker rmi jonasalaif/smt-scope
+          sudo rm smt-scope-${{ matrix.arch.name }}.tar.gz
+          sudo docker rmi jonasalaif/smt-scope
 
   upload-latest:
     runs-on: ubuntu-latest
@@ -103,5 +101,5 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Push SMTScope image
         run: |
-          docker manifest create jonasalaif/smt-scope:latest jonasalaif/smt-scope:amd64 jonasalaif/smt-scope:arm64
-          docker manifest push jonasalaif/smt-scope:latest
+          sudo docker manifest create jonasalaif/smt-scope:latest jonasalaif/smt-scope:amd64 jonasalaif/smt-scope:arm64
+          sudo docker manifest push jonasalaif/smt-scope:latest
