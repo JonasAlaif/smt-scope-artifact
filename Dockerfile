@@ -33,6 +33,6 @@ RUN cargo --config net.git-fetch-with-cli=true fetch && \
     cargo clean && \
     rm -rf /usr/local/cargo/registry
 
-RUN smt-scope/eval/axiom-profiler/build.sh && \
+RUN eval/axiom-profiler/build.sh && \
     mkdir -p target/release && \
     cp $(which smt-scope) target/release
