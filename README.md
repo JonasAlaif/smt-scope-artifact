@@ -1,6 +1,6 @@
 # Getting started
 
-Our artifact is provided as a Docker image, which can be run using any recent version of [Docker](https://docs.docker.com/get-docker/). Please start by unzipping the `smt-scope.zip` file to the root of the artifact, such that running `ls smt-scope` from the root of the artifact succeeds.
+Our artifact is provided as a Docker image, which can be run using any recent version of [Docker](https://docs.docker.com/get-docker/). Please start by unzipping the `smt-scope.zip` file to the root of the artifact, such that running `ls smt-scope/smt-scope-lib` from the root of the artifact succeeds.
 
 All commands should be run from the `smt-scope` directory
 
@@ -76,7 +76,7 @@ Once the GUI is opened in your browser, open the trace file created in the previ
 
 ## Structure of the artifact
 
-The structure of the artifact is detailed in the [`STRUCTURE.md`](sources/STRUCTURE.md) file.
+The structure of the artifact is detailed in the [`STRUCTURE.md`](STRUCTURE.md) file.
 
 ## Advanced use of the image
 
