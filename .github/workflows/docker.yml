@@ -22,7 +22,7 @@ jobs:
       - name: Move /var/lib/docker/
         run: |
             ls -la /var/lib/
-            ls -la /var/lib/docker/
+            sudo ls -la /var/lib/docker/
             mv /var/lib/docker/ "${GITHUB_WORKSPACE}/docker"
 
       - name: Maximize build space
