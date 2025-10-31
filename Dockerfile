@@ -1,5 +1,6 @@
 # docker build --progress=plain -t jonasalaif/smt-scope:testing . 2>&1 | tee build.log
-# docker run --rm -it -p 8080:8080 jonasalaif/smt-scope:testing python3 -m http.server 8080 --directory smt-scope/smt-scope-gui/dist
+# docker run --rm -it -p 8080:8080 jonasalaif/smt-scope:testing python3 -m http.server 8080 --directory smt-scope-gui/dist
+# docker run --rm -it -e SCOPE_TRACE_FILE=/demo/z3.log -v ${PWD}/demo:/demo jonasalaif/smt-scope:testing z3-scope /demo/intro.smt2
 
 FROM rust:1.90
 
@@ -28,8 +29,4 @@ RUN trunk build --release && cargo clean
 WORKDIR /usr/src/artifact/smt-scope/smt-scope-lib
 RUN cargo --config net.git-fetch-with-cli=true fetch && cargo install --path . && cargo clean
 
-WORKDIR /usr/src/smt-scope
-# Move the `/usr/src/artifact/smt-scope` folder to `/usr/src/smt-scope`:
-RUN mv ../artifact/smt-scope . && rm -rf ../artifact
-
-# # ENTRYPOINT ["/bin/sh"]
+WORKDIR /usr/src/artifact/smt-scope

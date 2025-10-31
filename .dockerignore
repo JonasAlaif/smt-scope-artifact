@@ -1,3 +1,2 @@
-smt-scope/eval/
-build.log
 Dockerfile
+.dockerignore
