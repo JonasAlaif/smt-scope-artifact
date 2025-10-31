@@ -35,7 +35,9 @@ jobs:
             build-mount-path: '/var/lib/docker/'
 
       - name: Restore /var/lib/docker/
-        run: sudo sh -c "mv ${GITHUB_WORKSPACE}/docker/* /var/lib/docker"
+        run: |
+            sudo sh -c "mv ${GITHUB_WORKSPACE}/docker/* /var/lib/docker"
+            sudo chmod 777 /var/lib/docker
 
     #   - name: Set up QEMU
     #     uses: docker/setup-qemu-action@v2
@@ -71,19 +73,19 @@ jobs:
       - name: Save ${{ matrix.arch.name }} SMTScope image
         run: |
           sudo docker tag jonasalaif/smt-scope:${{ matrix.arch.name }} jonasalaif/smt-scope:latest
-          sudo docker save jonasalaif/smt-scope:latest | gzip > smt-scope-${{ matrix.arch.name }}.tar.gz
-          sudo chmod 666 smt-scope-${{ matrix.arch.name }}.tar.gz
+          sudo docker save jonasalaif/smt-scope:latest | gzip > /var/lib/docker/smt-scope-${{ matrix.arch.name }}.tar.gz
+          sudo chmod 666 /var/lib/docker/smt-scope-${{ matrix.arch.name }}.tar.gz
         #   sudo docker push jonasalaif/smt-scope:${{ matrix.arch.name }}
 
       - name: Upload release smt-scope-${{ matrix.arch.name }}
         uses: softprops/action-gh-release@v1
         with:
           tag_name: latest
-          files: smt-scope-${{ matrix.arch.name }}.tar.gz
+          files: /var/lib/docker/smt-scope-${{ matrix.arch.name }}.tar.gz
 
       - name: Clean up after ${{ matrix.arch.name }} SMTScope image
         run: |
-          sudo rm smt-scope-${{ matrix.arch.name }}.tar.gz
+          sudo rm /var/lib/docker/smt-scope-${{ matrix.arch.name }}.tar.gz
           sudo docker rmi jonasalaif/smt-scope
 
   upload-latest:
