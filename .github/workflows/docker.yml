@@ -77,6 +77,9 @@ jobs:
           sudo docker save jonasalaif/smt-scope:latest | gzip > /var/lib/docker/smt-scope-${{ matrix.arch.name }}.tar.gz
           sudo chmod 666 /var/lib/docker/smt-scope-${{ matrix.arch.name }}.tar.gz
 
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+
       - name: Upload to Zenodo
         run: |
           curl -o /dev/null --upload-file "/var/lib/docker/smt-scope-${{ matrix.arch.name }}.tar.gz" "https://zenodo.org/api/files/a0837af5-8c07-496e-a7ff-94e0c9e4fc07/smt-scope-${{ matrix.arch.name }}.tar.gz?access_token=${{ secrets.ZENODO_TOKEN }}"
