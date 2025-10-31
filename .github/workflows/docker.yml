@@ -11,16 +11,16 @@ jobs:
   docker:
     strategy:
         matrix:
-          arch: [amd64, arm64]
-    runs-on: ubuntu-latest
+          arch: [ { name: amd64, os: ubuntu-latest }, { name: arm64, os: ubuntu-24.04-arm }]
+    runs-on: ${{ matrix.arch.os }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
         with:
           submodules: recursive
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+    #   - name: Set up QEMU
+    #     uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
       - name: Login to Docker Hub
@@ -29,42 +29,42 @@ jobs:
           username: jonasalaif
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build ${{ matrix.arch }} SMTScope image
-        run: docker buildx build --platform linux/${{ matrix.arch }} --load -t jonasalaif/smt-scope:${{ matrix.arch }} .
+      - name: Build ${{ matrix.arch.name }} SMTScope image
+        run: docker buildx build --platform linux/${{ matrix.arch.name }} --load -t jonasalaif/smt-scope:${{ matrix.arch.name }} .
 
     #   - name: Run evaluation intro
     #     run: |
     #       cd sources
-    #       docker run --rm --network none -v ${PWD}/demo.rs:/demo.rs jonasalaif/smt-scope:${{ matrix.arch }} run --release --bin ruslic /demo.rs
-    #       docker run --rm --network none jonasalaif/smt-scope:${{ matrix.arch }} run --release --bin cargo-russol -- --manifest-path=/home/sbtuser/demo/Cargo.toml
-    #       docker run --rm --network none -v ${PWD}/russol-alpha/ruslic/tests/synth/paper/rust/b-stackoverflow/reborrow.rs:/reborrow.rs jonasalaif/smt-scope:${{ matrix.arch }} run --release --bin ruslic /reborrow.rs
-    #       docker run --rm --network none -v ${PWD}/russol-alpha/ruslic/tests/synth/paper/rust/c-custom/list_ex/list_paper.rs:/list_paper.rs jonasalaif/smt-scope:${{ matrix.arch }} run --release --bin ruslic /list_paper.rs
+    #       docker run --rm --network none -v ${PWD}/demo.rs:/demo.rs jonasalaif/smt-scope:${{ matrix.arch.name }} run --release --bin ruslic /demo.rs
+    #       docker run --rm --network none jonasalaif/smt-scope:${{ matrix.arch.name }} run --release --bin cargo-russol -- --manifest-path=/home/sbtuser/demo/Cargo.toml
+    #       docker run --rm --network none -v ${PWD}/russol-alpha/ruslic/tests/synth/paper/rust/b-stackoverflow/reborrow.rs:/reborrow.rs jonasalaif/smt-scope:${{ matrix.arch.name }} run --release --bin ruslic /reborrow.rs
+    #       docker run --rm --network none -v ${PWD}/russol-alpha/ruslic/tests/synth/paper/rust/c-custom/list_ex/list_paper.rs:/list_paper.rs jonasalaif/smt-scope:${{ matrix.arch.name }} run --release --bin ruslic /list_paper.rs
     #   - name: Run evaluation benchmarks
-    #     if: ${{ matrix.arch == 'amd64' }}
+    #     if: ${{ matrix.arch.name == 'amd64' }}
     #     run: |
     #       cd sources
-    #       docker run --rm --network none jonasalaif/smt-scope:${{ matrix.arch }} test --release --test ci -- all_tests --nocapture
+    #       docker run --rm --network none jonasalaif/smt-scope:${{ matrix.arch.name }} test --release --test ci -- all_tests --nocapture
     #   - name: Run evaluation top 100 crates
-    #     if: ${{ matrix.arch == 'amd64' }}
+    #     if: ${{ matrix.arch.name == 'amd64' }}
     #     run: |
     #       cd sources
-    #       docker run --rm --network none jonasalaif/smt-scope:${{ matrix.arch }} test --release --test top_crates -- top_crates_cached --nocapture
+    #       docker run --rm --network none jonasalaif/smt-scope:${{ matrix.arch.name }} test --release --test top_crates -- top_crates_cached --nocapture
 
-      - name: Save ${{ matrix.arch }} SMTScope image
+      - name: Save ${{ matrix.arch.name }} SMTScope image
         run: |
-          docker push jonasalaif/smt-scope:${{ matrix.arch }}
-          docker tag jonasalaif/smt-scope:${{ matrix.arch }} jonasalaif/smt-scope:latest
-          docker save jonasalaif/smt-scope:latest | gzip > smt-scope-${{ matrix.arch }}.tar.gz
+          docker push jonasalaif/smt-scope:${{ matrix.arch.name }}
+          docker tag jonasalaif/smt-scope:${{ matrix.arch.name }} jonasalaif/smt-scope:latest
+          docker save jonasalaif/smt-scope:latest | gzip > smt-scope-${{ matrix.arch.name }}.tar.gz
 
-      - name: Upload release smt-scope-${{ matrix.arch }}
+      - name: Upload release smt-scope-${{ matrix.arch.name }}
         uses: softprops/action-gh-release@v1
         with:
           tag_name: latest
-          files: smt-scope-${{ matrix.arch }}.tar.gz
+          files: smt-scope-${{ matrix.arch.name }}.tar.gz
 
-      - name: Clean up after ${{ matrix.arch }} SMTScope image
+      - name: Clean up after ${{ matrix.arch.name }} SMTScope image
         run: |
-          rm smt-scope-${{ matrix.arch }}.tar.gz
+          rm smt-scope-${{ matrix.arch.name }}.tar.gz
           docker rmi jonasalaif/smt-scope
 
   upload-latest:
