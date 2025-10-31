@@ -20,7 +20,7 @@ jobs:
 
       - name: Create smt-scope zip
         run: |
-          zip -r smt-scope.zip smt-scope/* -x **/.git -x **/smt-logs
+          zip -r smt-scope.zip smt-scope/* -x **/.git -x **/smt-logs/**\*
 
       - name: Upload artifact files
         uses: softprops/action-gh-release@v1
