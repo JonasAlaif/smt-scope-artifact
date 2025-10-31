@@ -1,7 +1,3 @@
-# docker build --progress=plain -t jonasalaif/smt-scope:testing . 2>&1 | tee build.log
-# docker run --rm -it -p 8080:8080 jonasalaif/smt-scope:testing python3 -m http.server 8080 --directory smt-scope-gui/dist
-# docker run --rm -it -e SCOPE_TRACE_FILE=/demo/z3.log -v ${PWD}/demo:/demo jonasalaif/smt-scope:testing z3-scope /demo/intro.smt2
-
 FROM rust:1.90
 
 RUN cargo install cargo-binstall wasm-bindgen-cli
