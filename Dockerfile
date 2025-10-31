@@ -9,7 +9,7 @@ RUN cargo binstall trunk
 
 RUN \
   apt-get update && \
-  apt-get install -y --no-install-recommends cmake g++ python3-pip python3-setuptools && \
+  apt-get install -y --no-install-recommends cmake g++ python3-pip python3-jupyterlab python3-numpy python3-scipy python3-setuptools && \
   rm -rf /var/lib/apt/lists/*
 
 WORKDIR /usr/src/z3
@@ -20,8 +20,6 @@ RUN git clone https://github.com/Z3Prover/z3.git . && \
     make install && \
     cd ../.. && \
     rm -rf ./z3
-
-RUN pip3 install --no-cache-dir jupyterlab numpy scipy
 
 COPY . /usr/src/artifact
 
